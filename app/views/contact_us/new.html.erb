@@ -1,0 +1,20 @@
+<h1> Contact Us </h1>
+
+<%= form_tag contact_us_path do %>
+  <div>
+    <%= label_tag :full_name %>
+    <%= text_field_tag :full_name, nil, {placeholder: "J Smith"} %>
+  </div>
+
+  <div>
+    <%= label_tag :email %>
+    <%= email_field_tag :email %>
+  </div>
+
+  <div>
+    <%= label_tag :messages %>
+    <%= text_area_tag :messages %>
+  </div>
+  <%= submit_tag "Contact Us!" %>
+
+<% end %>
