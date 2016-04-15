@@ -1,11 +1,19 @@
 class Question < ActiveRecord::Base
 
+  #when using 'has_many' you must put a symbol for the assiciated record in teh plira format
+  # you should provide the :dpendednt option which cab be either:
+  # :destroy: which deletes all the associated answers when the qustion is deleted
+  # :nullify: WHich makes 'question_id' NULL for all associated answers
+  has_many :answers, dependent: :destroy
+  belongs_to :category
+  belongs_to :user
+
   # validates_presence_of :title # deprecated > likely to be removed in Rails 5
   # validates :title, :body, presence: true
   validates(:title, {presence: true, uniqueness: {message: "must be unique!"}})
 
   validates :body, length: {minimum: 5}
-               
+
   validates :view_count, numericality: {greater_than_or_equal_to: 0}
 
   # VALID_EMAIL_REGEX = /\A([\w+\-]\.?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
@@ -33,6 +41,10 @@ class Question < ActiveRecord::Base
   def self.search(search_term)
     # where(["title ILIKE :term OR body ILIKE :term", {term: "%#{search_term}%"}])
     where(["title ILIKE ? OR body ILIKE ?", "%#{search_term}%", "%#{search_term}%"])
+  end
+
+  def user_full_name
+    user ? user.full_name : ""
   end
 
   private
