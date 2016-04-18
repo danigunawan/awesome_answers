@@ -8,9 +8,10 @@ class QuestionsController < ApplicationController
   # be executed before.
   # in the code below `find_question` will only be executed before: show, edit
   # update and destroy actions
+  # before_action(:find_question, {only: [:show, :edit, :update, :destroy]})
 
-  #we refactored our question controller on tues april: 12th
-  before_action(:find_question, {only: [:show, :edit, :update, :destroy]})
+  before_action :find_question, only: [:edit, :update, :destroy, :show]
+  before_action :authorize_question, only: [:edit, :update, :destroy]
 
   def new
     # we need to define a new `Question` object in order to be able to
@@ -39,8 +40,8 @@ class QuestionsController < ApplicationController
     # Method 4
     # we use Strong Parameters feature of Rails
 
-    @question        = Question.new(question_params)
-    @question.user   = current_user
+    @question       = Question.new(question_params)
+    @question.user  = current_user
     if @question.save
       flash[:notice] = "Question created!"
       # render :show
@@ -85,12 +86,16 @@ class QuestionsController < ApplicationController
 
   private
 
+  def authorize_question
+    redirect_to root_path unless can? :manage, @question
+  end
+
   def find_question
     @question = Question.find params[:id]
   end
 
   def question_params
-    params.require(:question).permit([:title, :body])
+    params.require(:question).permit([:title, :body, :category_id])
   end
 
 end
