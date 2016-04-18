@@ -27,9 +27,8 @@
     <%= f.text_area :body %>
   </div>
   <div>
-    <%= f.label :catefory %>
-    <%= f.collection_select :category_id,
-        Category.order(:name), :id :name %>
+    <%#= f.label :category %>
+    <%#= f.collection_select :category_id, Category.order(:name), :id, :name %>
   </div>
   <%= f.submit %>
 <% end %>
