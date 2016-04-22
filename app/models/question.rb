@@ -8,6 +8,13 @@ class Question < ActiveRecord::Base
   belongs_to :category
   belongs_to :user
 
+  has_many :likes, dependent: :destroy
+  # has_many :users, through: :likes
+  has_many :liking_users, through: :likes, source: :user
+
+  has_many :votes, dependent: :destroy
+  has_many :voting_users, through: :votes, source: :user
+
   # validates_presence_of :title # deprecated > likely to be removed in Rails 5
   # validates :title, :body, presence: true
   validates(:title, {presence: true, uniqueness: {message: "must be unique!"}})
@@ -45,6 +52,18 @@ class Question < ActiveRecord::Base
 
   def user_full_name
     user ? user.full_name : ""
+  end
+
+  def like_for(user)
+    likes.find_by_user_id user
+  end
+
+  def vote_for(user)
+    votes.find_by_user_id user if user
+  end
+
+  def vote_value
+    votes.up_count - votes.down_count
   end
 
   private

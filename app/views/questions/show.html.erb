@@ -7,6 +7,7 @@
     authorization rules in the views and controllers. We didn't specifically
     put rules for :edit and :destroy but we put a rule for :crud which includes
     both of them. %>
+<div>
 <% if can? :update, @question %>
   <%= link_to "Edit", edit_question_path(@question) %>
 <% end %>
@@ -14,6 +15,34 @@
   <%= link_to "Delete", question_path(@question),
                         method: :delete,
                         data: {confirm: "Are you sure?"} %>
+<% end %>
+</div>
+
+<% if user_like %>
+  <%= link_to "Un-like", question_like_path(@question, user_like), method: :delete %>
+<% else %>
+  <%= link_to "Like", question_likes_path(@question), method: :post %>
+<% end %>
+
+(<%= @question.likes.count %>)
+  |
+<% user_vote = @question.vote_for(current_user) %>
+<% if user_vote && user_vote.is_up? %>
+  <%= link_to "Undo Vote Up", question_vote_path(@question, user_vote),
+                               method: :delete %>
+  <%= link_to "Vote-down", question_vote_path(@question, user_vote, {vote: {is_up:
+    false}}),
+                          method: :patch %>
+<% elsif user_vote %>
+<%= link_to "Vote Up",question_vote_path(@question, user_vote, {vote: {is_up:
+  true}}),
+                        method: :patch   %>
+<%= link_to "Undo Vote Down" %>
+<% else %>
+  <%= link_to "Vote Up", question_votes_path(@question, {vote: {is_up: true}}),
+                              method: :post %>
+  <%= link_to "Vote Down", question_votes_path(@question, {vote: {is_up: false}}),
+                              method: :post %>
 <% end %>
 <hr>
 

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+
   # This defines a route so that when we receive a GET request with url: /home
   # Rails will invoke the WelcomeController with `index` action
   # get({"/home" => "welcome#index"})
@@ -25,6 +26,7 @@ Rails.application.routes.draw do
   end
 
   resources :questions do
+    # get :lock, on: :member
     # get :search, on: :collection
     # get :search, on: :member
     # get :search
@@ -34,6 +36,10 @@ Rails.application.routes.draw do
     # question that it references
     # all the helpers will be the same as before prefixed with `question_`
     resources :answers, only: [:create, :destroy]
+
+    resources :likes, only: [:create, :destroy]
+
+    resources :votes, only: [:create, :update, :destroy]
   end
   # get    "/questions/new"      => "questions#new"   , as: :new_question
   # post   "/questions"          => "questions#create", as: :questions
