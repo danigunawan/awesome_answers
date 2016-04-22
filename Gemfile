@@ -35,6 +35,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
  gem "cancancan"
 
+ gem "quiet_assets"
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 
@@ -43,9 +45,12 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem "letter_opener"
+
   gem 'byebug'
   gem "interactive_editor"
   gem "awesome_print"
+  
   gem "hirb"
   gem 'faker', github: 'stympy/faker'
   gem 'rails-erd'
