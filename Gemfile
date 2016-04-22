@@ -37,6 +37,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
  gem "quiet_assets"
 
+ gem 'delayed_job_active_record'
+
+ gem "delayed_job_web"
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 
@@ -50,7 +54,7 @@ group :development, :test do
   gem 'byebug'
   gem "interactive_editor"
   gem "awesome_print"
-  
+
   gem "hirb"
   gem 'faker', github: 'stympy/faker'
   gem 'rails-erd'
