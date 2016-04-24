@@ -20,7 +20,7 @@ class Ability
 
     # defining the ability to :manage (do anything) with a question
     # in the case below we put inside the block an expression that will return
-    # true or false. This will determine whether the user is allowed to curd
+    # true or false. This will determine whether the user is allowed to crud
     # a question or not (create, read, update and destroy)
     can :crud, Question do |q|
       q.user == user && user.persisted?
