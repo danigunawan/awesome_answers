@@ -1,9 +1,10 @@
 class Question < ActiveRecord::Base
 
-  #when using 'has_many' you must put a symbol for the assiciated record in teh plira format
-  # you should provide the :dpendednt option which cab be either:
-  # :destroy: which deletes all the associated answers when the qustion is deleted
-  # :nullify: WHich makes 'question_id' NULL for all associated answers
+  # when using `has_many` you must put a symbol for the associated record in
+  # plural format
+  # you also should provide the :dependent option which can be either:
+  # :destroy: which deletes all the associated answers when the question is deleted
+  # :nullify: which makes `question_id` NULL for all associated answers
   has_many :answers, dependent: :destroy
   belongs_to :category
   belongs_to :user
@@ -58,7 +59,7 @@ class Question < ActiveRecord::Base
   end
 
   def like_for(user)
-    likes.find_by_user_id user
+    likes.find_by_user_id user if user
   end
 
   def vote_for(user)

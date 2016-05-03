@@ -1,0 +1,6 @@
+// in this context we are @answer is the instance variable from the answer_controller
+$("#answers").prepend("<%= j render '/answers/answer', answer: @answer, style: 'display: none' %>");
+//$("#answer_body").val("");
+//<%# @answer = Answer.new %>
+$("#answer-form").html("<%= j render '/answers/form', answer: Answer.new %>");
+$("#<%= dom_id(@answer) %>").slideDown(1000);

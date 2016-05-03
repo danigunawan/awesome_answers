@@ -4,12 +4,14 @@ class Vote < ActiveRecord::Base
 
   validates_inclusion_of :is_up, in: [true, false]
   validates :user_id, uniqueness: {scope: :question_id}
-end
-# scope :up_count, -> {wjere(is_up: true).count}
-def self.up_count
-  where(is_up: true).count
-end
 
-def self.down_count
-  where(is_up: false).count
+  scope :up_count, -> { where(is_up: true).count }
+  # def self.up_count
+  #   where(is_up: true).count
+  # end
+
+  def self.down_count
+    where(is_up: false).count
+  end
+
 end

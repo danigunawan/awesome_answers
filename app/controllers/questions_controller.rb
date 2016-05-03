@@ -1,5 +1,5 @@
-class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+
+  class QuestionsController < ApplicationController
   # defining a method in as a `before_action` will make it so that Rails
   # executes that method before executing the action. This is still within
   # the same request cycle
@@ -9,7 +9,7 @@ class QuestionsController < ApplicationController
   # in the code below `find_question` will only be executed before: show, edit
   # update and destroy actions
   # before_action(:find_question, {only: [:show, :edit, :update, :destroy]})
-
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :find_question, only: [:edit, :update, :destroy, :show]
   before_action :authorize_question, only: [:edit, :update, :destroy]
 
@@ -62,6 +62,11 @@ class QuestionsController < ApplicationController
   # params[:id] will be `56`
   def show
     @answer = Answer.new
+    respond_to do |format|
+      format.html { render } # render questions/show.html.erb
+      format.json { render json: @question.to_json }
+      format.xml  { render xml: @question.to_xml }
+    end
   end
 
   def index

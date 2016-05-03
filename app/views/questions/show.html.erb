@@ -2,13 +2,12 @@
 <p><%= @question.body %></p>
 <p>View Count: <%= @question.view_count %></p>
 <p>Created By: <%= @question.user_full_name.titleize %></p>
-<p> Tags: <%= @question.tags.map(&:name).join(", ") %>
-
+<!-- <p>Tags: <%#= @question.tags.map(&:name).join(", ") %></p> -->
+<p>Tags: <%= @question.tags.map{|t| t.name }.join(", ") %></p>
 <%# can? is a helper method that came from the CanCanCan gem to help us enforce
     authorization rules in the views and controllers. We didn't specifically
     put rules for :edit and :destroy but we put a rule for :crud which includes
     both of them. %>
-<div>
 <% if can? :update, @question %>
   <%= link_to "Edit", edit_question_path(@question) %>
 <% end %>
@@ -17,52 +16,39 @@
                         method: :delete,
                         data: {confirm: "Are you sure?"} %>
 <% end %>
+
+<div id="question-like">
+  <%= render "/likes/like" %>
 </div>
+ |
 
-<% if user_like %>
-  <%= link_to "Un-like", question_like_path(@question, user_like),
-                                            method: :delete %>
-<% else %>
-  <%= link_to "Like", question_likes_path(@question), method: :post %>
-<% end %>
-
-(<%= @question.likes.count %>)
-  |
 <% user_vote = @question.vote_for(current_user) %>
 <% if user_vote && user_vote.is_up? %>
-  <%= link_to "Undo Vote Up", question_vote_path(@question, user_vote),
+  <%= link_to "Un-do Vote Up", question_vote_path(@question, user_vote),
                                method: :delete %>
-  <%= link_to "Vote-down", question_vote_path(@question, user_vote, {vote: {is_up:
-    false}}),
-                          method: :patch %>
-<% elsif user_vote %>
-<%= link_to "Vote Up",question_vote_path(@question, user_vote, {vote: {is_up:
-  true}}),
-                        method: :patch   %>
-<%= link_to "Undo Vote Down" %>
+  <%= link_to "Vote Down", question_vote_path(@question, user_vote, {vote: {is_up: false}}),
+                            method: :patch %>
+<% elsif user_vote  %>
+  <%= link_to "Vote Up", question_vote_path(@question, user_vote, {vote: {is_up: true}}),
+                            method: :patch  %>
+  <%= link_to "Un-do Vote Down", question_vote_path(@question, user_vote),
+                               method: :delete %>
 <% else %>
   <%= link_to "Vote Up", question_votes_path(@question, {vote: {is_up: true}}),
-                              method: :post %>
+                          method: :post %>
   <%= link_to "Vote Down", question_votes_path(@question, {vote: {is_up: false}}),
-                              method: :post %>
+                          method: :post %>
 <% end %>
+(<%= @question.vote_value %>)
 <hr>
 
-<%= @answer.errors.full_messages.join(", ") %>
-<%#= form_for @answer, url: question_answers_path(@question) do |f| %>
-<%= form_for [@question, @answer] do |form_helper|  %>
-  <%= form_helper.text_area :body %>
-  <%= form_helper.submit %>
-<% end %>
+<div id="answer-form">
+  <%= render "/answers/form", answer: @answer %>
+</div>
 
 <h2>Answers</h2>
-<% @question.answers.each do |ans| %>
-  <%= ans.body %>
-  by: <%= ans.user_full_name.titleize %>
-  <% if can? :destroy, ans %>
-    <%= link_to "delete", question_answer_path(@question, ans),
-                          data: {confirm: "Are you sure?"},
-                          method: :delete %>
+<div id="answers">
+  <% @question.answers.each do |ans| %>
+    <%= render "/answers/answer", answer: ans %>
   <% end %>
-  <hr>
-<% end %>
+</div>
